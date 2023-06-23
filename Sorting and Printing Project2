@@ -1,3 +1,62 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <iterator>
+#include <algorithm>
+
+using namespace std;
+//struct for course information
+struct Course {
+    string courseNumber;
+    string courseName;
+    vector<string> prerequisites;
+};
+//method to split the information from the data file
+vector<string> tokenize(const string& s, const string& del = " ") {
+    istringstream iss(s);
+    vector<string> stringArray(istream_iterator<string>{iss},
+        istream_iterator<string>());
+    return stringArray;
+}
+//open file
+void parseCSV(const string& fileName, vector<Course>& courses) {
+    ifstream inputFile(fileName);
+    if (inputFile.is_open()) {
+        cout << "File opened successfully!" << endl;
+
+        string line;
+        while (getline(inputFile, line)) {
+            stringstream ss(line);
+            string token;
+            Course course;
+
+            // Parse the line by splitting on commas and assigning information to designated locations number,name ,prerequisite
+            while (getline(ss, token, ',')) {
+                if (course.courseNumber.empty()) {
+                    course.courseNumber = token;
+                }
+                else if (course.courseName.empty()) {
+                    course.courseName = token;
+                }
+                else {
+                    stringstream prereqStream(token);
+                    string prereq;
+                    while (getline(prereqStream, prereq, '\t')) {
+                        course.prerequisites.push_back(prereq);
+                    }
+                }
+            }
+
+            courses.push_back(course);
+        }
+
+        inputFile.close();
+    }
+    else {
+        cout << "Failed to open the file!" << endl;
+    }
+}
 //function to print sorted list
 void printSortedList(const vector<Course>& courses) {
     //make copy of vector
