@@ -1,0 +1,13 @@
+//function to print sorted list
+void printSortedList(const vector<Course>& courses) {
+    //make copy of vector
+    vector<Course> sortedCourses = courses;
+    //sort vector by course number
+    sort(sortedCourses.begin(), sortedCourses.end(), [](const Course& c1, const Course& c2) {
+        return c1.courseNumber < c2.courseNumber;
+        });
+    //print sorted list
+    for (const auto& course : sortedCourses) {
+        cout << course.courseNumber << ", " << course.courseName << endl;
+    }
+}
